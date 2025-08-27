@@ -1,103 +1,106 @@
-import Image from "next/image";
+import Head from 'next/head';
+import Link from 'next/link';
+import React from 'react';
+import Image from 'next/image';
 
-export default function Home() {
+// This is a CSS-only solution for the card flip effect.
+// It uses Tailwind CSS utility classes with transform properties
+// and does not require any state management hooks like useState.
+// The `group-hover` utility class is the key to triggering the flip animation.
+
+const HomePage = () => {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col items-center justify-center p-8">
+      <Head>
+        <title>เว็บไซต์เครื่องคำนวณ</title>
+        <meta name="description" content="เว็บไซต์สำหรับคำนวณ BMI, BMR, และผ่อนรถ" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <main className="flex flex-col items-center justify-center w-full flex-1 text-center py-12 px-4">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-12 text-gray-800 dark:text-gray-100">
+          เว็บไซต์เครื่องคำนวณสารพัดประโยชน์
+        </h1>
+        <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-16 max-w-2xl">
+          เครื่องมือครบครันสำหรับการคำนวณด้านสุขภาพและการเงิน
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-7xl">
+          {/* Card 1: BMI Calculator */}
+          <Link href="/bmi" legacyBehavior>
+            <a className="relative perspective-1000 group">
+              <div className="relative w-full h-80 transform-style-3d transition-transform duration-700 group-hover:rotate-y-180 rounded-2xl shadow-xl dark:shadow-2xl">
+                {/* Card Front */}
+                <div className="absolute w-full h-full backface-hidden bg-white dark:bg-gray-800 p-6 flex flex-col items-center justify-center rounded-2xl">
+                  <img src="/bmi.png" alt="bmi" className="w-20 h-20" />
+                  <h2 className="text-3xl font-bold mb-4 text-blue-600 dark:text-blue-400">
+                    เครื่องคำนวณ BMI
+                  </h2>
+                  <p className="text-center text-gray-600 dark:text-gray-300 px-4">
+                    คำนวณดัชนีมวลกายเพื่อประเมินน้ำหนักที่เหมาะสม
+                  </p>
+                </div>
+                {/* Card Back */}
+                <div className="absolute w-full h-full backface-hidden bg-blue-600 dark:bg-blue-800 rotate-y-180 p-6 flex flex-col items-center justify-center rounded-2xl">
+                  <p className="text-center text-white text-lg font-medium px-4">
+                    คลิกเพื่อหาว่าน้ำหนักของคุณเหมาะสมหรือไม่
+                  </p>
+                </div>
+              </div>
+            </a>
+          </Link>
+
+          {/* Card 2: BMR Calculator */}
+          <Link href="/bmr" legacyBehavior>
+            <a className="relative perspective-1000 group">
+              <div className="relative w-full h-80 transform-style-3d transition-transform duration-700 group-hover:rotate-y-180 rounded-2xl shadow-xl dark:shadow-2xl">
+                {/* Card Front */}
+                <div className="absolute w-full h-full backface-hidden bg-white dark:bg-gray-800 p-6 flex flex-col items-center justify-center rounded-2xl">
+                  <img src="/bmr.png" alt="bmi" className="w-20 h-20" />
+                  <h2 className="text-3xl font-bold mb-4 text-green-600 dark:text-green-400">
+                    เครื่องคำนวณ BMR
+                  </h2>
+                  <p className="text-center text-gray-600 dark:text-gray-300 px-4">
+                    คำนวณอัตราการเผาผลาญพลังงานพื้นฐานของร่างกาย
+                  </p>
+                </div>
+                {/* Card Back */}
+                <div className="absolute w-full h-full backface-hidden bg-green-600 dark:bg-green-800 rotate-y-180 p-6 flex flex-col items-center justify-center rounded-2xl">
+                  <p className="text-center text-white text-lg font-medium px-4">
+                    คลิกเพื่อดูว่าร่างกายคุณต้องการพลังงานเท่าไหร่ต่อวัน
+                  </p>
+                </div>
+              </div>
+            </a>
+          </Link>
+
+          {/* Card 3: Car Installment Calculator */}
+          <Link href="/carinstallment" legacyBehavior>
+            <a className="relative perspective-1000 group">
+              <div className="relative w-full h-80 transform-style-3d transition-transform duration-700 group-hover:rotate-y-180 rounded-2xl shadow-xl dark:shadow-2xl">
+                {/* Card Front */}
+                <div className="absolute w-full h-full backface-hidden bg-white dark:bg-gray-800 p-6 flex flex-col items-center justify-center rounded-2xl">
+                  <img src="/car.png" alt="bmi" className="w-20 h-20" />
+                  <h2 className="text-3xl font-bold mb-4 text-purple-600 dark:text-purple-400">
+                    คำนวณผ่อนรถ
+                  </h2>
+                  <p className="text-center text-gray-600 dark:text-gray-300 px-4">
+                    วางแผนการผ่อนชำระค่างวดรถยนต์ในแต่ละเดือน
+                  </p>
+                </div>
+                {/* Card Back */}
+                <div className="absolute w-full h-full backface-hidden bg-purple-600 dark:bg-purple-800 rotate-y-180 p-6 flex flex-col items-center justify-center rounded-2xl">
+                  <p className="text-center text-white text-lg font-medium px-4">
+                    คลิกเพื่อคำนวณค่างวดรถในฝันของคุณ
+                  </p>
+                </div>
+              </div>
+            </a>
+          </Link>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
-}
+};
+
+export default HomePage;
