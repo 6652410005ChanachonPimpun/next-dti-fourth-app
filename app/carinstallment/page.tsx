@@ -1,169 +1,166 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 
-// The main App component for the car installment calculator UI.
 export default function App() {
   // State variables for the form inputs.
-  const [carPrice, setCarPrice] = useState<string>('');
-  const [downPaymentAmount, setDownPaymentAmount] = useState<string>('');
-  const [downPaymentPercentage, setDownPaymentPercentage] = useState<number>(0);
-  const [interestRate, setInterestRate] = useState<number>(0);
-  const [installmentPeriod, setInstallmentPeriod] = useState<number>(0);
-  const [monthlyInstallment, setMonthlyInstallment] = useState<string>('0.00');
+  const [carPrice, setCarPrice] = useState('');
+  const [downPaymentPercentage, setDownPaymentPercentage] = useState('');
+  const [interestRate, setInterestRate] = useState('');
+  const [installmentPeriod, setInstallmentPeriod] = useState('');
+  const [monthlyInstallment, setMonthlyInstallment] = useState('0.00');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // Placeholder function for future calculation logic.
+  // Function to handle the calculation logic.
   const handleCalculate = () => {
-    // This is where the calculation logic will go.
-    // For now, it's just a placeholder.
-    console.log("Calculate button clicked");
+    // Clear any previous error messages.
+    setErrorMessage('');
+
+    // Input validation.
+    if (!carPrice || !interestRate || !installmentPeriod) {
+      setErrorMessage('กรุณาป้อนค่าราคารถ ดอกเบี้ย และจำนวนเดือน');
+      return;
+    }
+    if (parseFloat(carPrice) <= 0 || parseFloat(interestRate) <= 0 || parseFloat(installmentPeriod) <= 0) {
+      setErrorMessage('ค่าที่ป้อนต้องมากกว่า 0');
+      return;
+    }
+
+    // Convert inputs to numbers.
+    const carPriceNum = parseFloat(carPrice);
+    const downPaymentPercentageNum = parseFloat(downPaymentPercentage) || 0;
+    const interestRateNum = parseFloat(interestRate);
+    const installmentPeriodNum = parseFloat(installmentPeriod);
+
+    // Calculation formulas from your request.
+    const downPayment = carPriceNum * (downPaymentPercentageNum / 100);
+    const remainingAmount = carPriceNum - downPayment;
+    const totalInterest = remainingAmount * (interestRateNum / 100) * (installmentPeriodNum / 12);
+    const totalAmountToPay = remainingAmount + totalInterest;
+    const calculatedMonthlyInstallment = totalAmountToPay / installmentPeriodNum;
+
+    // Update the state with the calculated value.
+    setMonthlyInstallment(calculatedMonthlyInstallment.toFixed(2));
   };
 
-  // Placeholder function to reset the form.
+  // Function to reset all input fields and results.
   const handleReset = () => {
     setCarPrice('');
-    setDownPaymentAmount('');
-    setDownPaymentPercentage(0);
-    setInterestRate(0);
-    setInstallmentPeriod(0);
+    setDownPaymentPercentage('');
+    setInterestRate('');
+    setInstallmentPeriod('');
     setMonthlyInstallment('0.00');
+    setErrorMessage('');
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
-      <div className="w-full max-w-2xl transform rounded-3xl bg-white p-8 shadow-2xl transition-all duration-300 hover:scale-[1.01]">
-        {/* Header section with titles and an image */}
-        <div className="mb-8 text-center">
-          <h1 className="mb-2 text-4xl font-bold text-gray-800">Car Installment</h1>
-          <h2 className="mb-4 text-xl font-medium text-gray-600">คำนวณ ค่างวดรถ</h2>
-          {/* Placeholder for a car image */}
-          <div className="flex justify-center ">
-            <img src="/car.png" alt="car" className="h-full w-50" />
-          </div>
-        </div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+      <div className="bg-white p-8 md:p-12 rounded-3xl shadow-2xl w-full max-w-2xl transform transition-all duration-300 hover:scale-105">
+        <h1 className="text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-2">
+          Car Installment Calculator
+        </h1>
+        <p className="text-xl md:text-2xl font-medium text-center text-indigo-600">
+          คำนวณค่างวดรถ
+        </p>
+        <img src="/car.png" alt="car" className='w-40 mx-auto mb-2 center'/>
 
-        {/* Form fields for the calculator */}
         <div className="space-y-6">
           {/* Car Price Input */}
-          <div>
-            <label htmlFor="carPrice" className="mb-2 block text-sm font-medium text-gray-700">
-              ราคารถยนต์ (บาท)
+          <div className="flex flex-col">
+            <label htmlFor="carPrice" className="text-sm font-semibold text-gray-700 mb-2">
+              ราคารถ (บาท)
             </label>
             <input
               type="number"
               id="carPrice"
+              placeholder="0.00"
+              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
               value={carPrice}
               onChange={(e) => setCarPrice(e.target.value)}
-              className="mt-1 block w-full rounded-xl border-gray-300 px-4 py-3 text-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              placeholder="ป้อนราคารถยนต์"
             />
           </div>
 
-          {/* Down Payment Input and Select */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label htmlFor="downPayment" className="mb-2 block text-sm font-medium text-gray-700">
-                เงินดาวน์ (บาท)
-              </label>
-              <input
-                type="number"
-                id="downPayment"
-                value={downPaymentAmount}
-                onChange={(e) => setDownPaymentAmount(e.target.value)}
-                className="mt-1 block w-full rounded-xl border-gray-300 px-4 py-3 text-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                placeholder="ป้อนเงินดาวน์"
-              />
-            </div>
-            <div>
-              <label htmlFor="downPaymentPercent" className="mb-2 block text-sm font-medium text-gray-700">
-                เงินดาวน์ (%)
-              </label>
-              <select
-                id="downPaymentPercent"
-                value={downPaymentPercentage}
-                onChange={(e) => setDownPaymentPercentage(Number(e.target.value))}
-                className="mt-1 block w-full rounded-xl border-gray-300 px-4 py-3 text-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              >
-                <option value={0}>เลือก</option>
-                <option value={10}>10%</option>
-                <option value={15}>15%</option>
-                <option value={20}>20%</option>
-                <option value={25}>25%</option>
-                <option value={30}>30%</option>
-                <option value={35}>35%</option>
-                <option value={40}>40%</option>
-                <option value={45}>45%</option>
-                <option value={50}>50%</option>
-              </select>
-            </div>
+          {/* Down Payment Percentage Input */}
+          <div className="flex flex-col">
+            <label htmlFor="downPaymentPercentage" className="text-sm font-semibold text-gray-700 mb-2">
+              เงินดาวน์ (%)
+            </label>
+            <input
+              type="number"
+              id="downPaymentPercentage"
+              placeholder="0"
+              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+              value={downPaymentPercentage}
+              onChange={(e) => setDownPaymentPercentage(e.target.value)}
+            />
           </div>
 
-          {/* Interest Rate and Installment Period */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label htmlFor="interestRate" className="mb-2 block text-sm font-medium text-gray-700">
-                ดอกเบี้ยต่อปี (%)
-              </label>
-              <input
-                type="number"
-                id="downPayment"
-                value={downPaymentAmount}
-                onChange={(e) => setDownPaymentAmount(e.target.value)}
-                className="mt-1 block w-full rounded-xl border-gray-300 px-4 py-3 text-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                placeholder="ป้อนดอกเบี้ยต่อปี"
-              />
-            </div>
-            <div>
-              <label htmlFor="installmentPeriod" className="mb-2 block text-sm font-medium text-gray-700">
-                จำนวนเดือนผ่อน
-              </label>
-              <select
-                id="installmentPeriod"
-                value={installmentPeriod}
-                onChange={(e) => setInstallmentPeriod(Number(e.target.value))}
-                className="mt-1 block w-full rounded-xl border-gray-300 px-4 py-3 text-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              >
-                <option value={0}>เลือก</option>
-                <option value={1}>1 เดือน</option>
-                <option value={2}>2 เดือน</option>
-                <option value={3}>3 เดือน</option>
-                <option value={4}>4 เดือน</option>
-                <option value={5}>5 เดือน</option>
-                <option value={6}>6 เดือน</option>
-                <option value={7}>7 เดือน</option>
-                <option value={8}>8 เดือน</option>
-                <option value={8}>9 เดือน</option>
-                <option value={8}>10 เดือน</option>
-                <option value={8}>11 เดือน</option>
-                <option value={8}>12 เดือน</option>
-              </select>
-            </div>
+          {/* Interest Rate Input */}
+          <div className="flex flex-col">
+            <label htmlFor="interestRate" className="text-sm font-semibold text-gray-700 mb-2">
+              อัตราดอกเบี้ยต่อปี (%)
+            </label>
+            <input
+              type="number"
+              id="interestRate"
+              placeholder="0.00"
+              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+              value={interestRate}
+              onChange={(e) => setInterestRate(e.target.value)}
+            />
           </div>
 
-          {/* Buttons and Result Display */}
-          <div className="flex flex-col items-center justify-center space-y-4 pt-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-            <button
-              onClick={handleCalculate}
-              className="w-full transform rounded-full bg-blue-600 px-8 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              คำนวณ
-            </button>
-            <button
-              onClick={handleReset}
-              className="w-full transform rounded-full bg-gray-300 px-8 py-3 font-semibold text-gray-700 shadow-lg transition-all duration-300 hover:scale-105 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
-            >
-              รีเซ็ต
-            </button>
-          </div>
-
-          {/* Result display */}
-          <div className="mt-8 rounded-2xl bg-gray-100 p-6 text-center">
-            <p className="text-xl font-medium text-gray-700">
-              ค่าค่างวดต่อเดือน:
-              <span className="ml-2 text-2xl font-bold text-blue-600">{monthlyInstallment}</span> บาท
-            </p>
+          {/* Installment Period Input */}
+          <div className="flex flex-col">
+            <label htmlFor="installmentPeriod" className="text-sm font-semibold text-gray-700 mb-2">
+              จำนวนเดือนที่ผ่อน
+            </label>
+            <input
+              type="number"
+              id="installmentPeriod"
+              placeholder="0"
+              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+              value={installmentPeriod}
+              onChange={(e) => setInstallmentPeriod(e.target.value)}
+            />
           </div>
         </div>
+        
+        {/* Action Buttons */}
+        <div className="flex flex-col md:flex-row mt-8 space-y-4 md:space-y-0 md:space-x-4">
+          <button
+            className="w-full md:w-1/2 bg-indigo-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 transition-transform transform hover:scale-105"
+            onClick={handleCalculate}>
+            คำนวณค่างวด
+          </button>
+          <button
+            className="w-full md:w-1/2 bg-gray-400 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-gray-500 focus:outline-none focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50 transition-transform transform hover:scale-105"
+            onClick={handleReset}>
+            รีเซ็ต
+          </button>
+        </div>
+
+        {/* Display for Error Message */}
+        {errorMessage && (
+          <div className="mt-4 text-center text-red-600 font-semibold">
+            {errorMessage}
+          </div>
+        )}
+
+        {/* Display for the result */}
+        <div className="mt-8 text-center">
+          <p className="text-lg font-bold text-gray-800">
+            ค่างวดต่อเดือน: <span className="text-2xl text-indigo-600">
+              {monthlyInstallment} บาท
+            </span>
+          </p>
+        </div>
+        <Link href="/" legacyBehavior> 
+          <div className="mt-6 text-center text-xl font-bold text-gray-800">
+            กลับไปหน้าแรก
+          </div>
+        </Link>
       </div>
     </div>
   );

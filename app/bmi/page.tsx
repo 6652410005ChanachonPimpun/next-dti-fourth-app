@@ -3,6 +3,8 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Home() {
   const [weight, setWeight] = useState<string>('');
@@ -10,16 +12,21 @@ export default function Home() {
   const [bmi, setBmi] = useState<number | null>(null);
 
   const calculateBMI = () => {
-    // Convert height from cm to meters
+
+    if (!height || !weight) {
+        alert("กรุณาป้อนค่าส่วนสูงและน้ำหนัก");
+        return; 
+    }
+
     const heightInMeters = parseFloat(height) / 100;
     const weightInKg = parseFloat(weight);
 
-    // Check for valid inputs
+    
     if (weightInKg > 0 && heightInMeters > 0) {
       const calculatedBmi = weightInKg / (heightInMeters * heightInMeters);
       setBmi(calculatedBmi);
     } else {
-      setBmi(null); // Reset BMI if inputs are invalid
+      setBmi(null); 
     }
   };
 
@@ -57,7 +64,7 @@ export default function Home() {
               type="number"
               id="weight"
               name="weight"
-              placeholder="เช่น 65"
+              placeholder="น้ำหนัก"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
               className="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-300 ease-in-out"
@@ -71,7 +78,7 @@ export default function Home() {
               type="number"
               id="height"
               name="height"
-              placeholder="เช่น 170"
+              placeholder="ส่วนสูง"
               value={height}
               onChange={(e) => setHeight(e.target.value)}
               className="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-300 ease-in-out"
@@ -101,6 +108,11 @@ export default function Home() {
         <div className="mt-6 text-center text-xl font-bold text-gray-800">
           ค่า BMI ที่คำนวณได้ : {bmi !== null ? bmi.toFixed(2) : '0.00'}
         </div>
+        <Link href="/" legacyBehavior> 
+          <div className="mt-6 text-center text-xl font-bold text-gray-800">
+            กลับไปหน้าแรก
+          </div>
+        </Link>
       </div>
     </div>
   );
